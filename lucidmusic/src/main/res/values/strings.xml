@@ -10,6 +10,8 @@
     <string name="starttime_label">Time To Start</string>
     <string name="duration_label">Time To Reach Max Volume</string>
     <string name="max_volume">Max Volume</string>
+    <string name="hours_label">Hours</string>
+    <string name="minutes_label">Minutes</string>
 
 
 
