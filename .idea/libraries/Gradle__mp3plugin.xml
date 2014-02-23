@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: mp3plugin">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lucidmusic/libs/mp3plugin.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
