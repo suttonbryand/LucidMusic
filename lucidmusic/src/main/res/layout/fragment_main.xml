@@ -133,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/save_event"
-            android:onClick="stop" />
+            android:onClick="save" />
 
     </LinearLayout>
 

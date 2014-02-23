@@ -12,6 +12,7 @@ public class LucidPlayer extends MediaPlayer{
     private int status;
     private double volume_increment;
     private double current_volume;
+    private double  max_volume;
     private Thread t;
 
     public final static int STATUS_PLAYING = 1;
@@ -19,11 +20,12 @@ public class LucidPlayer extends MediaPlayer{
     public final static int STATUS_STOPPED = 3;
 
     private final String location    = "/storage/sdcard0/Music/fires.mp3";
-    private int          delay       = 3600;
+    private int          delay       = 0;
 
     public LucidPlayer(){
 
         status = STATUS_STOPPED;
+        max_volume = 1;
         resetValues();
         super.setLooping(true);
         try {
@@ -85,7 +87,19 @@ public class LucidPlayer extends MediaPlayer{
         }
     }
 
+    public void save(int hours, int minutes, double seconds_to_max, double max_volume_arg){
+        // TODO: set time
+
+        setTimeToMaxVolume(seconds_to_max);
+        max_volume = max_volume_arg;
+
+
+    }
+
     public void setTimeToMaxVolume(double seconds){
+        if(seconds < 1){
+            seconds = 1;
+        }
         volume_increment = 1 / seconds;
     }
 
@@ -102,14 +116,14 @@ public class LucidPlayer extends MediaPlayer{
         t = new Thread(){
 
             public void run(){
-                while(current_volume < 1 && status != STATUS_STOPPED){
+                android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_volume);
+                while(current_volume < max_volume && status != STATUS_STOPPED){
+                    android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_volume);
                     if(status != STATUS_PAUSED && delay == 0){
                         current_volume += volume_increment;
-                        android.util.Log.w("LucidPlayer","volume is " + current_volume);
                         player.setVolume((float)current_volume, (float)current_volume);
                     }
                     else if(delay > 0){
-                        android.util.Log.w("LucidPlayer","volume is " + current_volume);
                         delay--;
                     }
                     try {

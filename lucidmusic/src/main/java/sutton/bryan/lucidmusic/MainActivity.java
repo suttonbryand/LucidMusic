@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.view.*;
+import android.widget.*;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -65,6 +67,29 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void save(View view){
+        // Get the start time
+        TimePicker time = (TimePicker) findViewById(R.id.timepicker_startime);
+        int hours        = time.getCurrentHour();
+        int minutes     = time.getCurrentMinute();
+
+        // Get the duration
+        NumberPicker hours_duration      = (NumberPicker) findViewById(R.id.hours);
+        NumberPicker minutes_duration    = (NumberPicker) findViewById(R.id.minutes);
+        int duration = (hours_duration.getValue() * 60 * 60) + (minutes_duration.getValue() * 60);
+
+        // Get the max volume
+        SeekBar max_volume_bar   = (SeekBar) findViewById(R.id.maxvol_seekbar);
+        android.util.Log.w("set volume is " , "" + max_volume_bar.getProgress());
+        double max_volume = max_volume_bar.getProgress() / (double)100;
+        android.util.Log.w("passing volume " , "" + max_volume);
+
+        lucidplayer.save(hours,minutes,duration,max_volume);
+
+
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -77,6 +102,11 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            NumberPicker hours      = (NumberPicker) rootView.findViewById(R.id.hours);
+            NumberPicker minutes    = (NumberPicker) rootView.findViewById(R.id.minutes);
+
+            hours.setMaxValue(24);
+            minutes.setMaxValue(60);
             return rootView;
         }
     }
