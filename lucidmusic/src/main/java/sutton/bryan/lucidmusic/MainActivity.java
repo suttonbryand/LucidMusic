@@ -92,14 +92,19 @@ public class MainActivity extends ActionBarActivity {
 
         // Schedule the alarm
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,hour);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
-        long set_millis = calendar.getTimeInMillis();
 
-        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmActivity.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, set_millis, alarmIntent);
+        Intent intent = new Intent(getApplicationContext(), AlarmActivity.class);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+        PendingIntent alarmIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        int alarmType = AlarmManager.RTC_WAKEUP;
+        AlarmManager alarmmanager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
+        //alarmMgr.setExact(AlarmManager.RTC, set_millis, alarmIntent);
+        alarmmanager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
 
         lucidplayer.save(duration,max_volume);
 
