@@ -16,6 +16,7 @@ import android.os.Build;
 import android.view.*;
 import android.widget.*;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import java.util.Calendar;
 
@@ -60,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void play(View view){
         android.util.Log.w("LucidPlayer","Main Play");
+        updateCurrentPlayer(view);
         lucidplayer.start();
     }
 
@@ -73,27 +75,27 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void updateCurrentPlayer(View view){
+        int duration = getDuration(view);
+        float max_volume = getMaxVolume(view);
+        lucidplayer.save(duration,max_volume);
+    }
+
     public void save(View view){
         // Get the start time
         TimePicker time = (TimePicker) findViewById(R.id.timepicker_startime);
         int hour        = time.getCurrentHour();
         int minute     = time.getCurrentMinute();
 
-        // Get the duration
-        NumberPicker hours_duration      = (NumberPicker) findViewById(R.id.hours);
-        NumberPicker minutes_duration    = (NumberPicker) findViewById(R.id.minutes);
-        int duration = (hours_duration.getValue() * 60 * 60) + (minutes_duration.getValue() * 60);
+        int duration = getDuration(view);
 
-        // Get the max volume
-        SeekBar max_volume_bar   = (SeekBar) findViewById(R.id.maxvol_seekbar);
-        android.util.Log.w("set volume is " , "" + max_volume_bar.getProgress());
-        double max_volume = max_volume_bar.getProgress() / (double)100;
-        android.util.Log.w("passing volume " , "" + max_volume);
+        float max_volume = getMaxVolume(view);
 
         // Schedule the alarm
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
 
         Intent intent = new Intent(getApplicationContext(), AlarmActivity.class);
         intent.setAction(Intent.ACTION_MAIN);
@@ -103,10 +105,19 @@ public class MainActivity extends ActionBarActivity {
 
         int alarmType = AlarmManager.RTC_WAKEUP;
         AlarmManager alarmmanager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
-        //alarmMgr.setExact(AlarmManager.RTC, set_millis, alarmIntent);
         alarmmanager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
 
-        lucidplayer.save(duration,max_volume);
+        // Save the settings
+        SharedPreferences pref = getSharedPreferences(getString(R.string.preferences), 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(getString(R.string.preference_duration), duration);
+        editor.putFloat(getString(R.string.preference_max_volume), max_volume);
+        editor.commit();
+
+        // Save to the current lucid player
+        lucidplayer.save(duration, max_volume);
+
+
 
         android.util.Log.w("LucidPlayer","saved");
 
@@ -116,6 +127,23 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this,AlarmActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private int getDuration(View view){
+        // Get the duration
+        NumberPicker hours_duration      = (NumberPicker) findViewById(R.id.hours);
+        NumberPicker minutes_duration    = (NumberPicker) findViewById(R.id.minutes);
+        return (hours_duration.getValue() * 60 * 60) + (minutes_duration.getValue() * 60);
+    }
+
+    private float getMaxVolume(View view){
+        // Get the max volume
+        SeekBar max_volume_bar   = (SeekBar) findViewById(R.id.maxvol_seekbar);
+        android.util.Log.w("set volume is " , "" + max_volume_bar.getProgress());
+        float max_volume = max_volume_bar.getProgress() / (float)100;
+        android.util.Log.w("progress is  " , "" + max_volume_bar.getProgress());
+        android.util.Log.w("passing volume " , "" + max_volume);
+        return max_volume;
     }
 
     /**

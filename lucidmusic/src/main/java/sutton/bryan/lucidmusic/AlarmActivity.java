@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.SharedPreferences;
 import android.os.Build;
 
 public class AlarmActivity extends ActionBarActivity {
@@ -20,8 +21,14 @@ public class AlarmActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
+        int duration = sharedPref.getInt(getString(R.string.preference_duration),0);
+        float max_volume = sharedPref.getFloat(getString(R.string.preference_max_volume), 1);
+
+        android.util.Log.w("read max_volume " , "" + max_volume);
+
         lucidplayer = new LucidPlayer();
-        lucidplayer.save(60,1);
+        lucidplayer.save(duration,max_volume);
         lucidplayer.start();
 
         if (savedInstanceState == null) {

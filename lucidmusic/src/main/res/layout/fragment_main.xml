@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/layout_margin">
+        >
 
         <TextView android:id="@+id/starttime_label"
             android:layout_width="wrap_content"
@@ -40,7 +40,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/layout_margin"
         android:layout_below="@id/starttime_layout">
 
         <TextView android:id="@+id/starttime_label"
