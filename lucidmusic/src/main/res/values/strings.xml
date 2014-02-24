@@ -12,7 +12,6 @@
     <string name="max_volume">Max Volume</string>
     <string name="hours_label">Hours</string>
     <string name="minutes_label">Minutes</string>
-
-
+    <string name="title_activity_alarm">AlarmActivity</string>
 
 </resources>

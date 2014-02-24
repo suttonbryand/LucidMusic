@@ -1,5 +1,8 @@
 package sutton.bryan.lucidmusic;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -12,6 +15,9 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.view.*;
 import android.widget.*;
+import android.content.Intent;
+
+import java.util.Calendar;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -70,8 +76,8 @@ public class MainActivity extends ActionBarActivity {
     public void save(View view){
         // Get the start time
         TimePicker time = (TimePicker) findViewById(R.id.timepicker_startime);
-        int hours        = time.getCurrentHour();
-        int minutes     = time.getCurrentMinute();
+        int hour        = time.getCurrentHour();
+        int minute     = time.getCurrentMinute();
 
         // Get the duration
         NumberPicker hours_duration      = (NumberPicker) findViewById(R.id.hours);
@@ -84,10 +90,27 @@ public class MainActivity extends ActionBarActivity {
         double max_volume = max_volume_bar.getProgress() / (double)100;
         android.util.Log.w("passing volume " , "" + max_volume);
 
-        lucidplayer.save(hours,minutes,duration,max_volume);
+        // Schedule the alarm
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,hour);
+        calendar.set(Calendar.MINUTE, minute);
+        long set_millis = calendar.getTimeInMillis();
 
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmActivity.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, set_millis, alarmIntent);
 
+        lucidplayer.save(duration,max_volume);
 
+        android.util.Log.w("LucidPlayer","saved");
+
+    }
+
+    public void test(View view){
+        Intent intent = new Intent(this,AlarmActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /**

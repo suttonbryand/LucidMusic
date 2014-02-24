@@ -1,6 +1,9 @@
 package sutton.bryan.lucidmusic;
-import android.media.*;
 
+import android.media.*;
+import java.util.Calendar;
+import android.app.AlarmManager;
+import android.content.Context;
 import java.io.IOException;
 
 
@@ -87,7 +90,7 @@ public class LucidPlayer extends MediaPlayer{
         }
     }
 
-    public void save(int hours, int minutes, double seconds_to_max, double max_volume_arg){
+    public void save(double seconds_to_max, double max_volume_arg){
         // TODO: set time
 
         setTimeToMaxVolume(seconds_to_max);
@@ -116,11 +119,13 @@ public class LucidPlayer extends MediaPlayer{
         t = new Thread(){
 
             public void run(){
-                android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_volume);
-                while(current_volume < max_volume && status != STATUS_STOPPED){
-                    android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_volume);
+                double max_vol = max_volume;
+                double vol_inc = volume_increment;
+                android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_vol);
+                while(current_volume < max_vol && status != STATUS_STOPPED){
+                    android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_vol);
                     if(status != STATUS_PAUSED && delay == 0){
-                        current_volume += volume_increment;
+                        current_volume += vol_inc;
                         player.setVolume((float)current_volume, (float)current_volume);
                     }
                     else if(delay > 0){
