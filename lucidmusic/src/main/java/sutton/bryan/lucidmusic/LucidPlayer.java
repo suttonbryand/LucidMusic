@@ -16,6 +16,8 @@ public class LucidPlayer extends MediaPlayer{
     private double volume_increment;
     private double current_volume;
     private float  max_volume;
+    private int current_time;
+    private int max_time = 60;
     private Thread t;
 
     public final static int STATUS_PLAYING = 1;
@@ -116,6 +118,7 @@ public class LucidPlayer extends MediaPlayer{
 
     private void resetValues(){
         current_volume = 0;
+        current_time   = 0;
         final LucidPlayer player = this;
         super.setVolume(0,0);
         t = new Thread(){
@@ -124,14 +127,21 @@ public class LucidPlayer extends MediaPlayer{
                 float max_vol = max_volume;
                 double vol_inc = volume_increment;
                 android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_vol);
-                while(current_volume < max_vol && status != STATUS_STOPPED){
-                    android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_vol);
-                    if(status != STATUS_PAUSED && delay == 0){
+                while(true){
+                    android.util.Log.w("LucidPlayer","current time is " + current_time);
+                    if(current_time >= max_time){
+                    //    player.stop();
+                    }
+                    if(current_volume < max_vol && status != STATUS_PAUSED && status != STATUS_STOPPED){
+                        android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_vol);
                         current_volume += vol_inc;
                         player.setVolume((float)current_volume, (float)current_volume);
                     }
-                    else if(delay > 0){
-                        delay--;
+                    else if(status == STATUS_STOPPED){
+                        break;
+                    }
+                    if(status != STATUS_PAUSED){
+                        current_time++;
                     }
                     try {
                         sleep(1000);
@@ -139,7 +149,6 @@ public class LucidPlayer extends MediaPlayer{
                     catch (InterruptedException e) {
                     }
                 }
-                android.util.Log.w("LucidPlayer","volume is " + current_volume + "out of " + max_vol);
             }
         };
     }
