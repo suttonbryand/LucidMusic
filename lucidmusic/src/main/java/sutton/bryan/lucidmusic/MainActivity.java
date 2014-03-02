@@ -2,33 +2,30 @@ package sutton.bryan.lucidmusic;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.view.*;
 import android.widget.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.Calendar;
 
 public class MainActivity extends ActionBarActivity {
 
-    private LucidPlayer lucidplayer;
+    private PlayerFragment playerfragment;
+    private LucidPlayer    lucidplayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lucidplayer = new LucidPlayer();
-        lucidplayer.setTimeToMaxVolume(21600);
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
@@ -36,6 +33,19 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        FragmentManager fm = getFragmentManager();
+        playerfragment = (PlayerFragment) fm.findFragmentByTag("lucidplayer");
+
+        if(playerfragment == null){
+            lucidplayer = new LucidPlayer();
+            lucidplayer.setTimeToMaxVolume(21600);
+            playerfragment = new PlayerFragment();
+            fm.beginTransaction().add(playerfragment, "lucidplayer").commit();
+            playerfragment.setLucidPlayer(lucidplayer);
+        }
+
+        lucidplayer = playerfragment.getLucidPlayer();
     }
 
 

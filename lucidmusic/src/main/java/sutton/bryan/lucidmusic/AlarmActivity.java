@@ -1,5 +1,6 @@
 package sutton.bryan.lucidmusic;
 
+import android.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -14,28 +15,38 @@ import android.os.Build;
 
 public class AlarmActivity extends ActionBarActivity {
 
+    private PlayerFragment playerfragment;
     private LucidPlayer lucidplayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm);
-
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
-        int duration = sharedPref.getInt(getString(R.string.preference_duration),0);
-        float max_volume = sharedPref.getFloat(getString(R.string.preference_max_volume), 1);
-
-        android.util.Log.w("read max_volume " , "" + max_volume);
-
-        lucidplayer = new LucidPlayer();
-        lucidplayer.save(duration,max_volume);
-        lucidplayer.start();
+        setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        FragmentManager fm = getFragmentManager();
+        playerfragment = (PlayerFragment) fm.findFragmentByTag("lucidplayer");
+
+        if(playerfragment == null){
+            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
+            int duration = sharedPref.getInt(getString(R.string.preference_duration),0);
+            float max_volume = sharedPref.getFloat(getString(R.string.preference_max_volume), 1);
+
+            lucidplayer = new LucidPlayer();
+            lucidplayer.save(duration,max_volume);
+
+            playerfragment = new PlayerFragment();
+            fm.beginTransaction().add(playerfragment, "lucidplayer").commit();
+            playerfragment.setLucidPlayer(lucidplayer);
+        }
+
+        lucidplayer = playerfragment.getLucidPlayer();
+        lucidplayer.start();
     }
 
 
