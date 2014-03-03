@@ -16,7 +16,7 @@ import android.os.Build;
 public class AlarmActivity extends ActionBarActivity {
 
     private PlayerFragment playerfragment;
-    private LucidPlayer lucidplayer;
+    private AlarmTimeManager alarmtimemanager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,23 +30,23 @@ public class AlarmActivity extends ActionBarActivity {
         }
 
         FragmentManager fm = getFragmentManager();
-        playerfragment = (PlayerFragment) fm.findFragmentByTag("lucidplayer");
+        playerfragment = (PlayerFragment) fm.findFragmentByTag("alarmtimemanager");
 
         if(playerfragment == null){
             SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferences), 0);
             int duration = sharedPref.getInt(getString(R.string.preference_duration),0);
             float max_volume = sharedPref.getFloat(getString(R.string.preference_max_volume), 1);
 
-            lucidplayer = new LucidPlayer();
-            lucidplayer.save(duration,max_volume);
+            alarmtimemanager = new AlarmTimeManager(this);
+            alarmtimemanager.getLucidPlayer().save(duration,max_volume);
 
             playerfragment = new PlayerFragment();
-            fm.beginTransaction().add(playerfragment, "lucidplayer").commit();
-            playerfragment.setLucidPlayer(lucidplayer);
+            fm.beginTransaction().add(playerfragment, "alarmtimemanager").commit();
+            playerfragment.setAlarmTimeManager(alarmtimemanager);
         }
 
-        lucidplayer = playerfragment.getLucidPlayer();
-        lucidplayer.start();
+        alarmtimemanager = playerfragment.getAlarmTimeManager();
+        alarmtimemanager.getLucidPlayer().start();
     }
 
 
@@ -72,16 +72,16 @@ public class AlarmActivity extends ActionBarActivity {
 
     public void play(View view){
         android.util.Log.w("LucidPlayer","Main Play");
-        lucidplayer.start();
+        alarmtimemanager.getLucidPlayer().start();
     }
 
     public void pause(View view){
-        lucidplayer.pause();
+        alarmtimemanager.getLucidPlayer().pause();
     }
 
     public void stop(View view){
         android.util.Log.w("LucidPlayer","Main Stop");
-        lucidplayer.stop();
+        alarmtimemanager.getLucidPlayer().stop();
 
     }
 

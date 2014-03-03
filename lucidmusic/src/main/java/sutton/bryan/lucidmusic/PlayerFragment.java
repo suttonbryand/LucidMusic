@@ -9,7 +9,7 @@ import android.app.Fragment;
 
 public class PlayerFragment extends Fragment {
 
-    private LucidPlayer lucidplayer;
+    private AlarmTimeManager alarmtimemanager;
 
     @Override
     public void onCreate(Bundle saveInstanceState){
@@ -17,12 +17,12 @@ public class PlayerFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public void setLucidPlayer(LucidPlayer player){
-        this.lucidplayer = player;
+    public void setAlarmTimeManager(AlarmTimeManager alarmtimemanager){
+        this.alarmtimemanager = alarmtimemanager;
     }
 
-    public LucidPlayer getLucidPlayer(){
-        return this.lucidplayer;
+    public AlarmTimeManager getAlarmTimeManager(){
+        return this.alarmtimemanager;
     }
 
 }

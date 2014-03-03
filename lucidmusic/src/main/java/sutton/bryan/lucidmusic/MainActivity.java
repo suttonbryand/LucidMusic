@@ -2,6 +2,7 @@ package sutton.bryan.lucidmusic;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
@@ -17,11 +18,12 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends ActionBarActivity {
 
     private PlayerFragment playerfragment;
-    private LucidPlayer    lucidplayer;
+    private AlarmTimeManager alarmtimemanager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +37,16 @@ public class MainActivity extends ActionBarActivity {
         }
 
         FragmentManager fm = getFragmentManager();
-        playerfragment = (PlayerFragment) fm.findFragmentByTag("lucidplayer");
+        playerfragment = (PlayerFragment) fm.findFragmentByTag("alarmtimemanager");
 
         if(playerfragment == null){
-            lucidplayer = new LucidPlayer();
-            lucidplayer.setTimeToMaxVolume(21600);
+            alarmtimemanager = new AlarmTimeManager(this);
             playerfragment = new PlayerFragment();
-            fm.beginTransaction().add(playerfragment, "lucidplayer").commit();
-            playerfragment.setLucidPlayer(lucidplayer);
+            fm.beginTransaction().add(playerfragment, "alarmtimemanager").commit();
+            playerfragment.setAlarmTimeManager(alarmtimemanager);
         }
 
-        lucidplayer = playerfragment.getLucidPlayer();
+        alarmtimemanager = playerfragment.getAlarmTimeManager();
     }
 
 
@@ -72,60 +73,25 @@ public class MainActivity extends ActionBarActivity {
     public void play(View view){
         android.util.Log.w("LucidPlayer","Main Play");
         updateCurrentPlayer(view);
-        lucidplayer.start();
+        alarmtimemanager.getLucidPlayer().start();
     }
 
     public void pause(View view){
-        lucidplayer.pause();
+        alarmtimemanager.getLucidPlayer().pause();
     }
 
     public void stop(View view){
         android.util.Log.w("LucidPlayer","Main Stop");
-        lucidplayer.stop();
+        alarmtimemanager.getLucidPlayer().stop();
 
     }
 
     public void updateCurrentPlayer(View view){
-        int duration = getDuration(view);
-        float max_volume = getMaxVolume(view);
-        lucidplayer.save(duration,max_volume);
+        alarmtimemanager.updateCurrentPlayer(view);
     }
 
     public void save(View view){
-        // Get the start time
-        TimePicker time = (TimePicker) findViewById(R.id.timepicker_startime);
-        int hour        = time.getCurrentHour();
-        int minute     = time.getCurrentMinute();
-
-        int duration = getDuration(view);
-
-        float max_volume = getMaxVolume(view);
-
-        // Schedule the alarm
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        Intent intent = new Intent(getApplicationContext(), AlarmActivity.class);
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-
-        PendingIntent alarmIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        int alarmType = AlarmManager.RTC_WAKEUP;
-        AlarmManager alarmmanager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
-        alarmmanager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent);
-
-        // Save the settings
-        SharedPreferences pref = getSharedPreferences(getString(R.string.preferences), 0);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putInt(getString(R.string.preference_duration), duration);
-        editor.putFloat(getString(R.string.preference_max_volume), max_volume);
-        editor.commit();
-
-        // Save to the current lucid player
-        lucidplayer.save(duration, max_volume);
+        alarmtimemanager.save(view);
 
 
 
@@ -133,27 +99,20 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void openTimePickerDialog(View view){
+        Calendar calendar = Calendar.getInstance();
+        int minute = calendar.get(Calendar.MINUTE);
+        int hour   = calendar.get(Calendar.HOUR_OF_DAY);
+
+        TimePickerDialog dialog = new TimePickerDialog(this, alarmtimemanager, hour, minute, false);
+        dialog.show();
+    }
+
+
     public void test(View view){
         Intent intent = new Intent(this,AlarmActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private int getDuration(View view){
-        // Get the duration
-        NumberPicker hours_duration      = (NumberPicker) findViewById(R.id.hours);
-        NumberPicker minutes_duration    = (NumberPicker) findViewById(R.id.minutes);
-        return (hours_duration.getValue() * 60 * 60) + (minutes_duration.getValue() * 60);
-    }
-
-    private float getMaxVolume(View view){
-        // Get the max volume
-        SeekBar max_volume_bar   = (SeekBar) findViewById(R.id.maxvol_seekbar);
-        android.util.Log.w("set volume is " , "" + max_volume_bar.getProgress());
-        float max_volume = max_volume_bar.getProgress() / (float)100;
-        android.util.Log.w("progress is  " , "" + max_volume_bar.getProgress());
-        android.util.Log.w("passing volume " , "" + max_volume);
-        return max_volume;
     }
 
     /**
