@@ -1,6 +1,7 @@
 package sutton.bryan.lucidmusic;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.support.v7.app.ActionBarActivity;
@@ -40,13 +41,14 @@ public class MainActivity extends ActionBarActivity {
         playerfragment = (PlayerFragment) fm.findFragmentByTag("alarmtimemanager");
 
         if(playerfragment == null){
-            alarmtimemanager = new AlarmTimeManager(this);
+            alarmtimemanager = new AlarmTimeManager();
             playerfragment = new PlayerFragment();
             fm.beginTransaction().add(playerfragment, "alarmtimemanager").commit();
             playerfragment.setAlarmTimeManager(alarmtimemanager);
         }
 
         alarmtimemanager = playerfragment.getAlarmTimeManager();
+        alarmtimemanager.setActivity(this);
     }
 
 
@@ -108,6 +110,17 @@ public class MainActivity extends ActionBarActivity {
         dialog.show();
     }
 
+    public void openDurationDialog(View view){
+        AlertDialog.Builder build = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View durationDialogView = inflater.inflate(R.layout.dialog_duration, null);
+        build.setView(durationDialogView)
+                .setPositiveButton(R.string.ok, alarmtimemanager);
+        AlertDialog dialog = build.create();
+        dialog.show();
+        alarmtimemanager.setDurationView(durationDialogView);
+    }
+
 
     public void test(View view){
         Intent intent = new Intent(this,AlarmActivity.class);
@@ -127,11 +140,6 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            NumberPicker hours      = (NumberPicker) rootView.findViewById(R.id.hours);
-            NumberPicker minutes    = (NumberPicker) rootView.findViewById(R.id.minutes);
-
-            hours.setMaxValue(24);
-            minutes.setMaxValue(60);
             return rootView;
         }
     }

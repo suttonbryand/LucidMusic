@@ -2,9 +2,11 @@ package sutton.bryan.lucidmusic;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
@@ -17,22 +19,33 @@ import java.util.Calendar;
 /**
  * Created by Bryan on 3/2/14.
  */
-public class AlarmTimeManager implements TimePickerDialog.OnTimeSetListener {
+public class AlarmTimeManager implements TimePickerDialog.OnTimeSetListener, Dialog.OnClickListener {
+
+    private View dialog_view;
+
+    public static final int BUTTON_CLICK_DURATION = 1;
+    private int buttonClickType = BUTTON_CLICK_DURATION;
+
+    private int duration_hours = 0;
+    private int duration_minutes = 0;
 
     private long triggerTime;
     private LucidPlayer lucidplayer;
     private Activity activity;
     private Context context;
 
-    public AlarmTimeManager(Activity a){
+    public AlarmTimeManager(){
         lucidplayer = new LucidPlayer();
         lucidplayer.setTimeToMaxVolume(21600);
-        activity = a;
-        context = a.getApplicationContext();
     }
 
     public LucidPlayer getLucidPlayer(){
         return this.lucidplayer;
+    }
+
+    public void setActivity(Activity a){
+        activity = a;
+        context = a.getApplicationContext();
     }
 
     public void save(View view){
@@ -71,11 +84,30 @@ public class AlarmTimeManager implements TimePickerDialog.OnTimeSetListener {
 
     }
 
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        switch(this.buttonClickType){
+            case BUTTON_CLICK_DURATION:
+                duration_hours = ((NumberPicker) dialog_view.findViewById(R.id.hours)).getValue();
+                duration_minutes = ((NumberPicker) dialog_view.findViewById(R.id.minutes)).getValue();
+        }
+    }
+
+    public void setDurationView(View view){
+        NumberPicker hours      = (NumberPicker) view.findViewById(R.id.hours);
+        NumberPicker minutes    = (NumberPicker) view.findViewById(R.id.minutes);
+        hours.setMaxValue(6);
+        minutes.setMaxValue(59);
+        hours.setValue(duration_hours);
+        minutes.setValue(duration_minutes);
+
+        this.buttonClickType = BUTTON_CLICK_DURATION;
+        this.dialog_view = view;
+    }
+
     private int getDuration(){
         // Get the duration
-        NumberPicker hours_duration      = (NumberPicker) activity.findViewById(R.id.hours);
-        NumberPicker minutes_duration    = (NumberPicker) activity.findViewById(R.id.minutes);
-        return (hours_duration.getValue() * 60 * 60) + (minutes_duration.getValue() * 60);
+        return (duration_hours * 60 * 60) + (duration_minutes * 60);
     }
 
     private float getMaxVolume(){
@@ -87,4 +119,5 @@ public class AlarmTimeManager implements TimePickerDialog.OnTimeSetListener {
         android.util.Log.w("passing volume " , "" + max_volume);
         return max_volume;
     }
+
 }

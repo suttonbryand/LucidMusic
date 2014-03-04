@@ -13,57 +13,16 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/starttime_label"
         android:onClick="openTimePickerDialog"
-        android:layout_marginBottom="60dp" />
+        android:layout_marginBottom="30dp" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/timetomax_layout"
+    <Button android:id="@+id/duration_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@id/starttime_layout">
-
-        <TextView android:id="@+id/starttime_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="24dp"
-            android:layout_marginBottom="@dimen/label_margin"
-            android:text="@string/duration_label"/>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <NumberPicker android:id="@+id/hours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-            <TextView android:id="@+id/hours_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hours_label"
-                android:layout_gravity="center_vertical"
-                android:textSize="24dp"/>
-
-            <NumberPicker android:id="@+id/minutes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="36dp"/>
-
-            <TextView android:id="@+id/minutes_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/minutes_label"
-                android:layout_gravity="center_vertical"
-                android:textSize="24dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+        android:text="Duration"
+        android:onClick="openDurationDialog"
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/starttime_layout"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -71,7 +30,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@id/timetomax_layout">
+        android:layout_below="@id/duration_layout">
 
         <TextView android:id="@+id/maxvol_label"
             android:layout_width="wrap_content"
@@ -79,7 +38,7 @@
             android:layout_gravity="center_horizontal"
             android:textSize="24dp"
             android:layout_marginBottom="@dimen/label_margin"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:text="@string/max_volume"/>
 
         <SeekBar android:id="@+id/maxvol_seekbar"

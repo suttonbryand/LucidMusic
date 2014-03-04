@@ -16,5 +16,6 @@
     <string name="preferences">sutton.bryan.lucidmusic</string>
     <string name="preference_duration">duration</string>
     <string name="preference_max_volume">max_volume</string>
+    <string name="ok">Ok</string>
 
 </resources>

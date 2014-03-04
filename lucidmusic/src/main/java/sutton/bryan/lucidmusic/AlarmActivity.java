@@ -37,7 +37,7 @@ public class AlarmActivity extends ActionBarActivity {
             int duration = sharedPref.getInt(getString(R.string.preference_duration),0);
             float max_volume = sharedPref.getFloat(getString(R.string.preference_max_volume), 1);
 
-            alarmtimemanager = new AlarmTimeManager(this);
+            alarmtimemanager = new AlarmTimeManager();
             alarmtimemanager.getLucidPlayer().save(duration,max_volume);
 
             playerfragment = new PlayerFragment();
@@ -46,6 +46,7 @@ public class AlarmActivity extends ActionBarActivity {
         }
 
         alarmtimemanager = playerfragment.getAlarmTimeManager();
+        alarmtimemanager.setActivity(this);
         alarmtimemanager.getLucidPlayer().start();
     }
 
