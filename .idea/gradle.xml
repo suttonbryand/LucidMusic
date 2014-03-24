@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/lucidmusic" />
+            <option value="C:\Users\Bryan\AndroidStudioProjects\LucidMusic" />
+            <option value="C:\Users\Bryan\AndroidStudioProjects\LucidMusic\lucidmusic" />
           </set>
         </option>
       </GradleProjectSettings>

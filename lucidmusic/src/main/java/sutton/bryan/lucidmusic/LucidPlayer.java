@@ -24,7 +24,7 @@ public class LucidPlayer extends MediaPlayer{
     public final static int STATUS_PAUSED  = 2;
     public final static int STATUS_STOPPED = 3;
 
-    private final String location    = "/storage/sdcard0/Music/fires.mp3";
+    private String location    = "/storage/sdcard0/Music/quel.mp3";
     private int          delay       = 0;
 
     public LucidPlayer(){
@@ -107,6 +107,17 @@ public class LucidPlayer extends MediaPlayer{
         }
         else{
             volume_increment = 1 / seconds;
+        }
+    }
+
+    public void setLocation(String loc){
+        stop();
+        super.reset();
+        this.location = loc;
+        try {
+            super.setDataSource(location);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

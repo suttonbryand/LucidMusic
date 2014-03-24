@@ -12,10 +12,12 @@
     <string name="max_volume">Max Volume</string>
     <string name="hours_label">Hours</string>
     <string name="minutes_label">Minutes</string>
+    <string name="browse_label">Choose Song</string>
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="preferences">sutton.bryan.lucidmusic</string>
     <string name="preference_duration">duration</string>
     <string name="preference_max_volume">max_volume</string>
     <string name="ok">Ok</string>
+    <string name="title_activity_list_file">ListFileActivity</string>
 
 </resources>

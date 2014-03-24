@@ -26,17 +26,23 @@ public class MainActivity extends ActionBarActivity {
     private PlayerFragment playerfragment;
     private AlarmTimeManager alarmtimemanager;
 
+    static final int PICK_FILE = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
+
         }
 
+        // Create the fragment for containing the Alarm Manager
         FragmentManager fm = getFragmentManager();
         playerfragment = (PlayerFragment) fm.findFragmentByTag("alarmtimemanager");
 
@@ -47,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
             playerfragment.setAlarmTimeManager(alarmtimemanager);
         }
 
+        // Set the Alarm Time Manager to contain this activity
         alarmtimemanager = playerfragment.getAlarmTimeManager();
         alarmtimemanager.setActivity(this);
     }
@@ -70,6 +77,20 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void fileBrowser(View view){
+        Intent fileBrowserIntent = new Intent(this,ListFileActivity.class);
+        startActivityForResult(fileBrowserIntent, PICK_FILE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == PICK_FILE) {
+            if (resultCode == RESULT_OK) {
+                android.util.Log.w("LucidPlayer" , "path is " + data.getStringExtra("result"));
+                alarmtimemanager.getLucidPlayer().setLocation(data.getStringExtra("result"));
+            }
+        }
     }
 
     public void play(View view){

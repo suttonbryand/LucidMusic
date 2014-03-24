@@ -22,6 +22,10 @@
             android:name="sutton.bryan.lucidmusic.AlarmActivity"
             android:label="@string/title_activity_alarm" >
         </activity>
+        <activity
+            android:name="sutton.bryan.lucidmusic.ListFileActivity"
+            android:label="@string/title_activity_list_file" >
+        </activity>
     </application>
 
 </manifest>
